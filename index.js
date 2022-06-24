@@ -12,6 +12,42 @@ const db = mysql.createConnection(
   console.log(`Connected to the employees_db`)
 );
 
+inquirer.prompt([
+  {
+    type: "list",
+    name: "MainMenu",
+    message: "What would you like to do?",
+    choices: [
+      "View All Employees",
+      "Add Employee",
+      "Update Employee Role",
+      "View All Roles",
+      "Add Role",
+      "View All Departments",
+      "Add Department",
+      "Quit",
+    ],
+  },
+]);
+
+inquirer.prompt([
+  {
+    type: "input",
+    name: "AddEmpFirstName",
+    message: "What is the employee's first name?",
+  },
+  {
+    type: "input",
+    name: "AddEmpLastName",
+    message: "What is the employee's last name?",
+  },
+  {
+    type: "input",
+    name: "AddEmpLastName",
+    message: "What is the employee's last name?",
+  },
+]);
+
 // No Front end
 // No Sequelize
 
@@ -41,3 +77,8 @@ const db = mysql.createConnection(
 //  Update An Employee Role
 //Select an Employee to update
 //Enter new Role
+
+db.query;
+
+db.query("SELECT * FROM department");
+//user selects
