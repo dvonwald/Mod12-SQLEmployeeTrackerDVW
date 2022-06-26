@@ -1,0 +1,11 @@
+{
+  "name": "Mod12-SQLEmployeeTrackerDVW",
+  "version": "1.0.0",
+  "description": "Module 12 SQL Employee Tracker Challenge",
+  "main": "index.js",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.3.3"
+  }
+}

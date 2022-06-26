@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const conTable = require("console.table");
+const { exit } = require("process");
 
 const db = mysql.createConnection(
   {
@@ -13,35 +14,72 @@ const db = mysql.createConnection(
 );
 
 function mainMenu() {
-  inquirer.prompt([
-    {
-      type: "list",
-      name: "MainMenu",
-      message: "What would you like to do?",
-      choices: [
-        "View All Employees", //Select all employees and details from database
-        "Add Employee", // trigger addEmployee function
-        "Update Employee Role", //
-        "View All Roles", // Select all roles from database
-        "Add Role", // insert new role into role table in database
-        "View All Departments", // select all departments from database
-        "Add Department", // insert new department into department table in db
-        "Quit", // exits out of the application
-      ],
-    },
-  ]);
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "MainMenu",
+        message: "What would you like to do?",
+        choices: [
+          "View All Employees", //Select all employees and details from database
+          "Add Employee", // trigger addEmployee function
+          "Update Employee Role", //
+          "View All Roles", // Select all roles from database
+          "Add Role", // insert new role into role table in database
+          "View All Departments", // select all departments from database
+          "Add Department", // insert new department into department table in db
+          "Quit", // exits out of the application
+        ],
+      },
+    ])
+    .then((input) => {
+      switch (input.MainMenu) {
+        case "View All Employees":
+          viewAllEmp();
+          break;
+        case "Add Employee":
+          addEmployee();
+          break;
+        case "Update Employee Role":
+          updateEmpRole();
+          break;
+        case "View All Roles":
+          viewAllRoles();
+          break;
+        case "Add Role":
+          addRole();
+          break;
+        case "View All Departments":
+          viewAllDept();
+          break;
+        case "Add Department":
+          addDept();
+          break;
+        case "Quit":
+          exit();
+          break;
+      }
+    });
 }
 
 function viewAllEmp() {
-  db.query(`SELECT * FROM employee`);
+  db.query(`SELECT employee.id AS Employee_ID, 
+employee.first_name, 
+employee.last_name, 
+role.title AS Title, 
+department.name AS Department,
+role.salary,
+employee.manager_id AS manager_id
+FROM employee JOIN role ON employee.role_id = role.id
+JOIN department ON department.id = role.department_id`);
 }
 
 function viewAllRoles() {
-  db.query(`SELECT * FROM role`);
+  db.query(`SELECT title, salary FROM role`);
 }
 
 function viewAllDept() {
-  db.query(`SELECT * FROM department`);
+  db.query(`SELECT name AS Department_Name FROM department`);
 }
 
 function addRole() {
@@ -113,6 +151,4 @@ function addDept() {
   ]);
 }
 
-db.query;
-
-db.query("SELECT * FROM department");
+mainMenu();
