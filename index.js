@@ -63,7 +63,9 @@ function mainMenu() {
 }
 
 function viewAllEmp() {
-  db.query(`SELECT employee.id AS Employee_ID, 
+  console.log("These are all employees on file.");
+  db.query(
+    `SELECT employee.id AS Employee_ID, 
 employee.first_name, 
 employee.last_name, 
 role.title AS Title, 
@@ -71,15 +73,34 @@ department.name AS Department,
 role.salary,
 employee.manager_id AS manager_id
 FROM employee JOIN role ON employee.role_id = role.id
-JOIN department ON department.id = role.department_id`);
+JOIN department ON department.id = role.department_id`,
+    function (err, results) {
+      console.log("=======================");
+      console.table(results);
+      console.log("=======================");
+    }
+  );
 }
 
 function viewAllRoles() {
-  db.query(`SELECT title, salary FROM role`);
+  console.log("These are all current roles");
+  db.query(`SELECT title, salary FROM role`, function (err, results) {
+    console.log("=======================");
+    console.table(results);
+    console.log("=======================");
+  });
 }
 
 function viewAllDept() {
-  db.query(`SELECT name AS Department_Name FROM department`);
+  console.log("These are all current departments");
+  db.query(
+    `SELECT name AS Department_Name FROM department`,
+    function (err, results) {
+      console.log("=======================");
+      console.table(results);
+      console.log("=======================");
+    }
+  );
 }
 
 function addRole() {
