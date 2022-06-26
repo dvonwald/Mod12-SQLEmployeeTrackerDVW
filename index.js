@@ -33,38 +33,37 @@ function mainMenu() {
 }
 
 function viewAllEmp() {
-    db.query(`SELECT * FROM employee`)
-};
+  db.query(`SELECT * FROM employee`);
+}
 
 function viewAllRoles() {
-    db.query(`SELECT * FROM role`)
+  db.query(`SELECT * FROM role`);
 }
 
 function viewAllDept() {
-    db.query(`SELECT * FROM department`)
+  db.query(`SELECT * FROM department`);
 }
 
 function addRole() {
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'addRoleName',
-            message: "What is the name of the role?"
-        },
-        {
-            type: 'input',
-            name: 'addRoleSalary',
-            message: "What is the salary of the role?"
-        },
-        {
-            type: 'list',
-            name: 'addRoleDept',
-            message: "What is the department for this role?"
-            choices: []
-        },
-    ])
+  inquirer.prompt([
+    {
+      type: "input",
+      name: "addRoleName",
+      message: "What is the name of the role?",
+    },
+    {
+      type: "input",
+      name: "addRoleSalary",
+      message: "What is the salary of the role?",
+    },
+    {
+      type: "list",
+      name: "addRoleDept",
+      message: "What is the department for this role?",
+      choices: [],
+    },
+  ]);
 }
-
 
 function addEmployee() {
   inquirer.prompt([
@@ -94,58 +93,26 @@ function addEmployee() {
 }
 
 function updateEmpRole() {
-    inquirer.prompt([
-        {
-            type: 'list',
-            name: 'UpdateEmpRole',
-            message: 'Which role do you want to assign the selected employee?',
-            choices: [],
-        }
-    ])
+  inquirer.prompt([
+    {
+      type: "list",
+      name: "UpdateEmpRole",
+      message: "Which role do you want to assign the selected employee?",
+      choices: [],
+    },
+  ]);
 }
 
 function addDept() {
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'addDeptName',
-            message: "What is the name of the department?"
-        }
-    ])
+  inquirer.prompt([
+    {
+      type: "input",
+      name: "addDeptName",
+      message: "What is the name of the department?",
+    },
+  ]);
 }
-
-
-// No Front end
-// No Sequelize
-
-// Application Start:
-//  View All Departments
-//Department Names
-//Department IDs
-//  View All Roles
-//Job Title
-//Role ID
-//Role Department
-//Role Salary
-//  View All Employees
-//Employee IDs
-//First Names
-//Last Names
-//Job Titles
-//Departments
-//Salaries
-//Managers
-//  Add A Department
-//Enter the Department Name -- Added to the DB
-//  Add A Role
-//Enter the Role Name, then Salary, then Department
-//  Add An Employee
-//Enter First Name, enter Last Name, enter Manager, -- added to the database
-//  Update An Employee Role
-//Select an Employee to update
-//Enter new Role
 
 db.query;
 
 db.query("SELECT * FROM department");
-//user selects
