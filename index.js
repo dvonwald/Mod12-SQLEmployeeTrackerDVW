@@ -13,6 +13,7 @@ const db = mysql.createConnection(
   console.log(`Connected to the employees_db`)
 );
 
+//Uses inquirer package and a promise .then statement as well as a break function to direct to individual functions for each option the user is presented with
 function mainMenu() {
   inquirer
     .prompt([
@@ -62,6 +63,7 @@ function mainMenu() {
     });
 }
 
+// Displays all employee's ID, First Name, Last Name, title(role), department, salary, and Manager in a table format
 function viewAllEmp() {
   console.log("These are all employees on file.");
   db.query(
@@ -84,6 +86,7 @@ LEFT OUTER JOIN employee AS Manager ON employee.manager_id = Manager.id`,
   );
 }
 
+//Displays all Roles and their salary in a table format
 function viewAllRoles() {
   console.log("This is a list of all current roles");
   db.query(`SELECT title, salary FROM role`, function (err, results) {
@@ -94,6 +97,7 @@ function viewAllRoles() {
   });
 }
 
+//Displays all departments in a table format
 function viewAllDept() {
   console.log("These are all current departments");
   db.query(
@@ -107,31 +111,31 @@ function viewAllDept() {
   );
 }
 
-function addRole() {
-  db.query(
-    `SELECT name AS Department_Name FROM department`,
-    function (err, results) {
-      let rolesArray = results;
-    }
-  );
-  inquirer.prompt([
-    {
-      type: "input",
-      name: "addRoleName",
-      message: "What is the name of the role?",
-    },
-    {
-      type: "input",
-      name: "addRoleSalary",
-      message: "What is the salary of the role?",
-    },
-    {
-      type: "list",
-      name: "addRoleDept",
-      message: "What is the department for this role?",
-      choices: rolesArray,
-    },
-  ]);
+async function addRole() {
+  try {
+    await db.query(`SELECT name FROM department;`);
+    console.log(response);
+    await inquirer.prompt([
+      {
+        type: "input",
+        name: "addRoleName",
+        message: "What is the name of the role?",
+      },
+      {
+        type: "input",
+        name: "addRoleSalary",
+        message: "What is the salary of the role?",
+      },
+      {
+        type: "list",
+        name: "addRoleDept",
+        message: "What is the department for this role?",
+        choices: rolesArray,
+      },
+    ]);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 function addEmployee() {
@@ -172,6 +176,7 @@ function updateEmpRole() {
   ]);
 }
 
+//Inserts a new Department into the Department table
 function addDept() {
   inquirer
     .prompt([
@@ -182,8 +187,22 @@ function addDept() {
       },
     ])
     .then((input) => {
-      db.query(`INSERT ${input.addDeptName}`);
+      console.log(input.addDeptName);
+      db.query(
+        `INSERT INTO department (name) VALUES ("${input.addDeptName}");`
+      );
     });
 }
 
 mainMenu();
+
+// async function work() {
+//     try {
+//         const response = await db.query()
+//         console.log(response);
+//         const processedResponse = await processRequest(response)
+//         console.log(processedResponse)
+//     }
+// } catch (err) {
+//     console.log(err)
+// }
