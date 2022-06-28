@@ -71,23 +71,26 @@ employee.last_name,
 role.title AS Title, 
 department.name AS Department,
 role.salary,
-employee.manager_id AS manager_id
+CONCAT(Manager.first_name,' ',Manager.last_name) AS manager_name
 FROM employee JOIN role ON employee.role_id = role.id
-JOIN department ON department.id = role.department_id`,
+JOIN department ON department.id = role.department_id
+LEFT OUTER JOIN employee AS Manager ON employee.manager_id = Manager.id`,
     function (err, results) {
       console.log("=======================");
       console.table(results);
       console.log("=======================");
+      mainMenu();
     }
   );
 }
 
 function viewAllRoles() {
-  console.log("These are all current roles");
+  console.log("This is a list of all current roles");
   db.query(`SELECT title, salary FROM role`, function (err, results) {
     console.log("=======================");
     console.table(results);
     console.log("=======================");
+    mainMenu();
   });
 }
 
@@ -99,11 +102,18 @@ function viewAllDept() {
       console.log("=======================");
       console.table(results);
       console.log("=======================");
+      mainMenu();
     }
   );
 }
 
 function addRole() {
+  db.query(
+    `SELECT name AS Department_Name FROM department`,
+    function (err, results) {
+      let rolesArray = results;
+    }
+  );
   inquirer.prompt([
     {
       type: "input",
@@ -119,7 +129,7 @@ function addRole() {
       type: "list",
       name: "addRoleDept",
       message: "What is the department for this role?",
-      choices: [],
+      choices: rolesArray,
     },
   ]);
 }
@@ -163,13 +173,17 @@ function updateEmpRole() {
 }
 
 function addDept() {
-  inquirer.prompt([
-    {
-      type: "input",
-      name: "addDeptName",
-      message: "What is the name of the department?",
-    },
-  ]);
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "addDeptName",
+        message: "What is the name of the department?",
+      },
+    ])
+    .then((input) => {
+      db.query(`INSERT ${input.addDeptName}`);
+    });
 }
 
 mainMenu();
