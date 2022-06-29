@@ -2,7 +2,7 @@ const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const conTable = require("console.table");
 const { exit } = require("process");
-const { map } = require("rxjs");
+const { map, ConnectableObservable } = require("rxjs");
 
 const db = mysql.createConnection(
   {
@@ -112,6 +112,7 @@ function viewAllDept() {
   );
 }
 
+// Used an async callback function for this
 async function addRole() {
   db.query(`SELECT id, name FROM department;`, async (err, results) => {
     const deptArray = results.map((r) => ({ name: r.name, value: r.id }));
@@ -136,6 +137,9 @@ async function addRole() {
     console.log(response);
     db.query(
       `INSERT INTO role (title, salary, department_id) VALUES ("${response.addRoleName}", ${response.addRoleSalary}, ${response.addRoleDept});`
+    );
+    console.log(
+      `${response.addRoleName} title with ${response.addRoleSalary} salary under ${response.addRoleDept} department was added to role table.`
     );
   });
 }
@@ -167,15 +171,39 @@ function addEmployee() {
   ]);
 }
 
-function updateEmpRole() {
-  inquirer.prompt([
-    {
-      type: "list",
-      name: "UpdateEmpRole",
-      message: "Which role do you want to assign the selected employee?",
-      choices: rolesArray,
-    },
-  ]);
+async function updateEmpRole() {
+  db.query(`SELECT id, title FROM role;`, async (err, results) => {
+    const rolesArray = results.map((res) => ({
+      name: res.title,
+      value: res.id,
+    }));
+    console.log(rolesArray);
+    db.query(
+      `SELECT id, first_name, last_name FROM employee;`,
+      async (err, results) => {
+        const empArray = results.map((res2) => ({
+          name: res2.first_name + " " + res2.last_name,
+          value: res2.id,
+        }));
+        const input = await inquirer.prompt([
+          {
+            type: "list",
+            name: "updateEmp",
+            message: "Which employee do you want to update?",
+            choices: empArray,
+          },
+          {
+            type: "list",
+            name: "UpdateEmpRole",
+            message: "Which role do you want to assign the selected employee?",
+            choices: rolesArray,
+          },
+        ]); // End of inquirer
+        console.log(input);
+        // db.query(`INSERT INTO employee () `)
+      }
+    );
+  });
 }
 
 //Inserts a new Department into the Department table
@@ -189,23 +217,16 @@ function addDept() {
       },
     ])
     .then((input) => {
-      console.log(input.addDeptName);
+      //   console.log(input.addDeptName);
       db.query(
         `INSERT INTO department (name) VALUES ("${input.addDeptName}");`
       );
+      console.log(`${input.addDeptName} added to Departments`);
+      mainMenu();
     });
 }
 
 mainMenu();
-
-// async function getRoles() {
-//   try {
-//     const response = await db.query(`SELECT title FROM role`);
-//     console.log(response);
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
 
 // function getRoles() {
 //   db.query(`SELECT title FROM role`, function (err, results) {
@@ -216,14 +237,10 @@ mainMenu();
 //   db.query(
 //       `SELECT title FROM role`
 //   function (err, results) {
-
 //       const rolesArray = map(results);
 //       console.log(rolesArray);
 //     }
 // )}
-// getRoles();
-
-// let rolesArray = db.query(`SELECT title FROM role`);
 
 // function getDept() {
 //   db.query(`SELECT name FROM department`, function (err, results) {
@@ -233,9 +250,6 @@ mainMenu();
 //     return deptArray;
 //   });
 // }
-
-// const deptArray = [];
-// let rolesArray;
 
 // getDept();
 
@@ -248,5 +262,4 @@ mainMenu();
 //   });
 // }
 
-// rolesArray = getRoles();
-// console.log(`Global ${rolesArray}`);
+// getRoles();
