@@ -29,6 +29,8 @@ You must clone the repo onto your computer. Once it is cloned, you must perform 
 ![SQL-Employee-Tracker-Demo](https://github.com/dvonwald/Mod12-SQLEmployeeTrackerDVW/blob/main/SQL%20Employee%20Tracker.gif?raw=true)
 You must run the index.js in node after performing the installation steps. The prompts and selections will then guide you step by step through the functionality of the application. Please see the video for a walkthrough.
 
+Video Walkthrough: (https://drive.google.com/file/d/1bB-J5BhYrJ7V6I497p7Jv0RreHK9x1Eu/view?usp=sharing)
+
 ## License
 
  is the license being used for this application.
