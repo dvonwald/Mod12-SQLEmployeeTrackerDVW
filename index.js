@@ -2,6 +2,7 @@ const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const conTable = require("console.table");
 const { exit } = require("process");
+const { map } = require("rxjs");
 
 const db = mysql.createConnection(
   {
@@ -112,10 +113,9 @@ function viewAllDept() {
 }
 
 async function addRole() {
-  try {
-    await db.query(`SELECT name FROM department;`);
-    console.log(response);
-    await inquirer.prompt([
+  db.query(`SELECT id, name FROM department;`, async (err, results) => {
+    const deptArray = results.map((r) => ({ name: r.name, value: r.id }));
+    const response = await inquirer.prompt([
       {
         type: "input",
         name: "addRoleName",
@@ -130,12 +130,14 @@ async function addRole() {
         type: "list",
         name: "addRoleDept",
         message: "What is the department for this role?",
-        choices: rolesArray,
+        choices: deptArray,
       },
     ]);
-  } catch (err) {
-    console.log(err);
-  }
+    console.log(response);
+    db.query(
+      `INSERT INTO role (title, salary, department_id) VALUES ("${response.addRoleName}", ${response.addRoleSalary}, ${response.addRoleDept});`
+    );
+  });
 }
 
 function addEmployee() {
@@ -171,7 +173,7 @@ function updateEmpRole() {
       type: "list",
       name: "UpdateEmpRole",
       message: "Which role do you want to assign the selected employee?",
-      choices: [],
+      choices: rolesArray,
     },
   ]);
 }
@@ -196,13 +198,55 @@ function addDept() {
 
 mainMenu();
 
-// async function work() {
-//     try {
-//         const response = await db.query()
-//         console.log(response);
-//         const processedResponse = await processRequest(response)
-//         console.log(processedResponse)
-//     }
-// } catch (err) {
-//     console.log(err)
+// async function getRoles() {
+//   try {
+//     const response = await db.query(`SELECT title FROM role`);
+//     console.log(response);
+//   } catch (err) {
+//     console.log(err);
+//   }
 // }
+
+// function getRoles() {
+//   db.query(`SELECT title FROM role`, function (err, results) {
+//   console.log(results);
+//   )}
+
+// function getRoles() {
+//   db.query(
+//       `SELECT title FROM role`
+//   function (err, results) {
+
+//       const rolesArray = map(results);
+//       console.log(rolesArray);
+//     }
+// )}
+// getRoles();
+
+// let rolesArray = db.query(`SELECT title FROM role`);
+
+// function getDept() {
+//   db.query(`SELECT name FROM department`, function (err, results) {
+//     console.log(results);
+//     deptArray = results.map(({ name: values }) => values);
+//     console.log(deptArray);
+//     return deptArray;
+//   });
+// }
+
+// const deptArray = [];
+// let rolesArray;
+
+// getDept();
+
+// function getRoles() {
+//   db.query(`SELECT title FROM role`, function (err, results) {
+//     // console.log(results);
+//     var resultsArray = results.map(({ title: values }) => values);
+//     console.log(resultsArray);
+//     return resultsArray;
+//   });
+// }
+
+// rolesArray = getRoles();
+// console.log(`Global ${rolesArray}`);
