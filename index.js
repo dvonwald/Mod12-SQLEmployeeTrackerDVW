@@ -200,7 +200,10 @@ async function updateEmpRole() {
           },
         ]); // End of inquirer
         console.log(input);
-        // db.query(`INSERT INTO employee () `)
+        console.log(input.UpdateEmpRole);
+        db.query(
+          `UPDATE employee SET employee.role_id = ${input.UpdateEmpRole} WHERE employee.id = ${input.updateEmp}`
+        );
       }
     );
   });
