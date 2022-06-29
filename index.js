@@ -134,7 +134,6 @@ async function addRole() {
         choices: deptArray,
       },
     ]);
-    console.log(response);
     db.query(
       `INSERT INTO role (title, salary, department_id) VALUES ("${response.addRoleName}", ${response.addRoleSalary}, ${response.addRoleDept});`
     );
@@ -202,7 +201,6 @@ async function updateEmpRole() {
       name: res.title,
       value: res.id,
     }));
-    console.log(rolesArray);
     db.query(
       `SELECT id, first_name, last_name FROM employee;`,
       async (err, results) => {
