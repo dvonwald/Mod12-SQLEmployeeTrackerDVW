@@ -23,7 +23,7 @@ This project is an employee tracker using MySQL. It uses three tables: departmen
 
 ## Installation
 
-You must clone the repo onto your computer. Once it is cloned, you must perform an <npm i> to install the required packages. Once the packages are installed, you must use mysql command line to seed the database. Log in to MySQL via the command line and then use the following two commands: <SOURCE schema.sql;> and <SOURCE seeds.sql;>.  You must perform these commands while inside the folder that these files are in. Once those steps are complete, run the index.js file with node to initiate the application.
+You must clone the repo onto your computer. Once it is cloned, you must perform an 'npm i' to install the required packages. Once the packages are installed, you must use mysql command line to seed the database. Log in to MySQL via the command line and then use the following two commands: <SOURCE schema.sql;> and <SOURCE seeds.sql;>.  You must perform these commands while inside the folder that these files are in. Once those steps are complete, run the index.js file with node to initiate the application.
 
 ## Usage
 ![SQL-Employee-Tracker-Demo](https://github.com/dvonwald/Mod12-SQLEmployeeTrackerDVW/blob/main/SQL%20Employee%20Tracker.gif?raw=true)
