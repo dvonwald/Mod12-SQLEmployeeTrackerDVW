@@ -141,16 +141,17 @@ async function addRole() {
     console.log(
       `${response.addRoleName} title with ${response.addRoleSalary} salary under ${response.addRoleDept} department was added to role table.`
     );
+    mainMenu();
   });
 }
 
+// queries for roles and managers and then allows for user input to set first and last name and select a role from the roles and managers provided to them in an array, then inserts that into the database under employees table
 async function addEmployee() {
   db.query(`SELECT id, title FROM role;`, async (err, results) => {
     const rolesArray = results.map((res) => ({
       name: res.title,
       value: res.id,
     }));
-    console.log(rolesArray);
     db.query(
       `SELECT id, first_name, last_name, manager_id FROM employees_db.employee WHERE manager_id IS null`,
       async (err, results) => {
@@ -182,14 +183,13 @@ async function addEmployee() {
             choices: mgrArray,
           },
         ]);
-        console.log(input);
-        console.log(input.AddEmpFirstName);
-        console.log(input.AddEmpLastName);
-        console.log(input.AddEmpRole);
-        console.log(input.AddEmpMgr);
         db.query(
           `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${input.AddEmpFirstName}", "${input.AddEmpLastName}", ${input.AddEmpRole}, ${input.AddEmpMgr});`
         );
+        console.log(
+          `${input.AddEmpFirstName} ${input.AddEmpLastName} has been added to the employees table`
+        );
+        mainMenu();
       }
     );
   });
@@ -224,11 +224,11 @@ async function updateEmpRole() {
             choices: rolesArray,
           },
         ]); // End of inquirer
-        console.log(input);
-        console.log(input.UpdateEmpRole);
         db.query(
           `UPDATE employee SET employee.role_id = ${input.UpdateEmpRole} WHERE employee.id = ${input.updateEmp}`
         );
+        console.log(`Employee's role has been updated`);
+        mainMenu();
       }
     );
   });
@@ -255,39 +255,3 @@ function addDept() {
 }
 
 mainMenu();
-
-// function getRoles() {
-//   db.query(`SELECT title FROM role`, function (err, results) {
-//   console.log(results);
-//   )}
-
-// function getRoles() {
-//   db.query(
-//       `SELECT title FROM role`
-//   function (err, results) {
-//       const rolesArray = map(results);
-//       console.log(rolesArray);
-//     }
-// )}
-
-// function getDept() {
-//   db.query(`SELECT name FROM department`, function (err, results) {
-//     console.log(results);
-//     deptArray = results.map(({ name: values }) => values);
-//     console.log(deptArray);
-//     return deptArray;
-//   });
-// }
-
-// getDept();
-
-// function getRoles() {
-//   db.query(`SELECT title FROM role`, function (err, results) {
-//     // console.log(results);
-//     var resultsArray = results.map(({ title: values }) => values);
-//     console.log(resultsArray);
-//     return resultsArray;
-//   });
-// }
-
-// getRoles();
