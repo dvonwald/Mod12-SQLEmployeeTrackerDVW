@@ -112,7 +112,7 @@ function viewAllDept() {
   );
 }
 
-// Used an async callback function for this
+// Used an async callback function for this (and the others), this does an sql db query for all departments and lets user select which department to add the new role to, after naming the dept and setting salary
 async function addRole() {
   db.query(`SELECT id, name FROM department;`, async (err, results) => {
     const deptArray = results.map((r) => ({ name: r.name, value: r.id }));
@@ -144,33 +144,58 @@ async function addRole() {
   });
 }
 
-function addEmployee() {
-  inquirer.prompt([
-    {
-      type: "input",
-      name: "AddEmpFirstName",
-      message: "What is the employee's first name?",
-    },
-    {
-      type: "input",
-      name: "AddEmpLastName",
-      message: "What is the employee's last name?",
-    },
-    {
-      type: "list",
-      name: "AddEmpRole",
-      message: "What is the employee's role?",
-      choices: [],
-    },
-    {
-      type: "list",
-      name: "AddEmpMgr",
-      message: "Who is this employee's manager?",
-      choices: [],
-    },
-  ]);
+async function addEmployee() {
+  db.query(`SELECT id, title FROM role;`, async (err, results) => {
+    const rolesArray = results.map((res) => ({
+      name: res.title,
+      value: res.id,
+    }));
+    console.log(rolesArray);
+    db.query(
+      `SELECT id, first_name, last_name, manager_id FROM employees_db.employee WHERE manager_id IS null`,
+      async (err, results) => {
+        const mgrArray = results.map((res2) => ({
+          name: res2.first_name + " " + res2.last_name,
+          value: res2.id,
+        }));
+        const input = await inquirer.prompt([
+          {
+            type: "input",
+            name: "AddEmpFirstName",
+            message: "What is the employee's first name?",
+          },
+          {
+            type: "input",
+            name: "AddEmpLastName",
+            message: "What is the employee's last name?",
+          },
+          {
+            type: "list",
+            name: "AddEmpRole",
+            message: "What is the employee's role?",
+            choices: rolesArray,
+          },
+          {
+            type: "list",
+            name: "AddEmpMgr",
+            message: "Who is this employee's manager?",
+            choices: mgrArray,
+          },
+        ]);
+        console.log(input);
+        console.log(input.AddEmpFirstName);
+        console.log(input.AddEmpLastName);
+        console.log(input.AddEmpRole);
+        console.log(input.AddEmpMgr);
+        db.query(
+          `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${input.AddEmpFirstName}", "${input.AddEmpLastName}", ${input.AddEmpRole}, ${input.AddEmpMgr});`
+        );
+      }
+    );
+  });
 }
 
+//This is the database sql queries for a list of employees and a list of exisitng roles, mapped out, and listed in the app for user to choose from and set
 async function updateEmpRole() {
   db.query(`SELECT id, title FROM role;`, async (err, results) => {
     const rolesArray = results.map((res) => ({
@@ -209,7 +234,7 @@ async function updateEmpRole() {
   });
 }
 
-//Inserts a new Department into the Department table
+//Inserts a new Department into the Department table, using inquirer to capture user input
 function addDept() {
   inquirer
     .prompt([
